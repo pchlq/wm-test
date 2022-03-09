@@ -1,13 +1,20 @@
 ---
 run:
   envs:
-#    GET_ATM_DETAIL_PATH,
-#    GET_ATM_NEARBY_DETAIL_PATH,
-#    GET_ATM_NEARBY_FILTERED_PATH,
-#    GET_ATM_NEARBY_SHORT_PATH,
+
+    GET_ATM_DETAIL_PATH,
+    GET_ATM_NEARBY_DETAIL_PATH,
+    GET_ATM_NEARBY_FILTERED_PATH,
+    GET_ATM_NEARBY_SHORT_PATH,
 
     GET_CATEGORIES_PATH,
     GET_OPERATOR_INFO_PATH,
+    GET_OPERATOR_PATH,
+
+    GET_REQUEST_MOBILE_PAYMENT_REQUEST_PATH,
+    GET_CONFIRM_MOBILE_PAYMENT_REQUEST_PATH,
+    GET_PAYMENT_INFO_BASE_PATH,
+    GET_START_MOBILE_PAYMENT_REQUEST_PATH
 
 settings:
   # Банкоматы
@@ -484,4 +491,564 @@ settings:
         media-type: /
         body: '{"type": "string", "message": "string"}'
 
+
   # Платежи поставщикам услуг
+  GET_REQUEST_MOBILE_PAYMENT_REQUEST_PATH:
+    name: GET_REQUEST_MOBILE_PAYMENT_REQUEST_PATH
+    url: /payments/request
+    port: 8087
+    method: POST
+    httpStatus: 500
+    fixedDelay: 10
+    file-response: json-responses/*/payments-request.json
+    description: Запрос на оплату номера мобильного телефона
+    request-body: '{
+      "serviceProviderId": "1",
+      "clientProduct": {
+        "id": "1329CD96444B428895BEF56AF8016246",
+        "type": "ACCOUNT"
+      },
+      "mobileNumber": {
+        "number": "9008001122"
+      },
+      "paySum": {
+        "amount": 600,
+        "currency": {
+          "code": "RUB"
+        }
+      }
+    }'
+    request-headers:
+      X-UNC: X-UNC
+      X-MDM-ID: X-MDM-ID
+      X-TB-ID: X-TB-ID
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+  "status": {
+    "code": "string",
+    "message": "Ошибка валидации запроса на оплату"
+  },
+  "payment": {
+    "id": "4d9065bc-55f7-4317-b728-5097344dc72f",
+    "paySum": {
+      "amount": 600,
+      "currency": {
+        "code": "RUB"
+      }
+    },
+    "commission": {
+      "amount": 600,
+      "currency": {
+        "code": "RUB"
+      }
+    },
+    "totalSum": {
+      "amount": 600,
+      "currency": {
+        "code": "RUB"
+      }
+    },
+    "clientProduct": {
+      "account": {
+        "entityName": "string",
+        "alias": "string",
+        "publicId": "string",
+        "productType": "ACCOUNT",
+        "entityType": "string",
+        "entityId": "string",
+        "balance": {
+          "amount": 600,
+          "currency": {
+            "code": "RUB"
+          }
+        }
+      },
+      "card": {
+        "entityName": "string",
+        "alias": "string",
+        "publicId": "string",
+        "productType": "CARD",
+        "entityType": "string",
+        "entityId": "string",
+        "balance": {
+          "amount": 600,
+          "currency": {
+            "code": "RUB"
+          }
+        }
+      }
+    },
+    "serviceProvider": {
+      "id": "1",
+      "name": "Какой-то поставщик",
+      "shortName": "Поставщик",
+      "type": "CONTRACT",
+      "subTypes": "MOBILE_BY_PHONE",
+      "description": "Описание поставщика",
+      "actions": {
+        "payment": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "template": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "autoPaymentByDate": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "autoPaymentByBalance": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "invoice": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "repeat": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "remind": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "subscription": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        }
+      },
+      "categoryIds": [
+        "string"
+      ]
+    }
+  }
+}'
+      '400':
+        media-type: /
+        body: '{
+  "status": {
+    "code": "string",
+    "message": "Ошибка валидации запроса на оплату"
+  },
+  "errors": [
+    {
+      "name": "string",
+      "code": "string",
+      "message": "Некорректные данные"
+    }
+  ]
+}'
+      '500':
+        media-type: /
+        body: 'string'
+
+  GET_CONFIRM_MOBILE_PAYMENT_REQUEST_PATH:
+    name: GET_CONFIRM_MOBILE_PAYMENT_REQUEST_PATH
+    url: /payments/confirm
+    port: 8088
+    method: POST
+    httpStatus: 200
+    fixedDelay: 10
+    file-response: json-responses/*/payments-confirm.json
+    description: Запрос на подтверждение оплаты номера мобильного телефона
+    request-body: '{
+      "id": "string",
+      "clientApprove": {
+        "purpose": "string",
+        "code": "1234",
+        "additionalData": {
+          "params": [
+            {
+              "key": "noBiometry",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    }'
+    request-headers:
+      X-UNC: X-UNC
+      X-MDM-ID: X-MDM-ID
+      X-CLIENT-CHANNEL: X-CLIENT-CHANNEL
+      X-TB-ID: X-TB-ID
+      x-user-session-id: x-user-session-id
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+  "status": {
+    "code": "string",
+    "message": "Ошибка валидации запроса на оплату"
+  },
+  "payment": {
+    "id": "4d9065bc-55f7-4317-b728-5097344dc72f",
+    "documentId": "1234567890",
+    "status": "PROCESSING",
+    "createdAt": "2022-03-09T14:18:36.670Z",
+    "updatedAt": "2022-03-09T14:18:36.670Z",
+    "creationChannel": "WEB",
+    "sourceType": "NEW",
+    "userMdmId": "1234567890",
+    "sourceSystemId": "payments-acceptance-mobile",
+    "serviceProvider": {
+      "id": "1",
+      "name": "Какой-то поставщик",
+      "shortName": "Поставщик",
+      "type": "CONTRACT",
+      "subTypes": "MOBILE_BY_PHONE",
+      "description": "Описание поставщика",
+      "actions": {
+        "payment": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "template": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "autoPaymentByDate": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "autoPaymentByBalance": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "invoice": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "repeat": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "remind": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        },
+        "subscription": {
+          "enabled": true,
+          "systemId": "MINERVA"
+        }
+      },
+      "categoryIds": [
+        "string"
+      ]
+    },
+    "clientProduct": {
+      "account": {
+        "entityName": "string",
+        "alias": "string",
+        "publicId": "string",
+        "productType": "ACCOUNT",
+        "entityType": "string",
+        "entityId": "string",
+        "balance": {
+          "amount": 600,
+          "currency": {
+            "code": "RUB"
+          }
+        }
+      },
+      "card": {
+        "entityName": "string",
+        "alias": "string",
+        "publicId": "string",
+        "productType": "CARD",
+        "entityType": "string",
+        "entityId": "string",
+        "balance": {
+          "amount": 600,
+          "currency": {
+            "code": "RUB"
+          }
+        }
+      }
+    },
+    "paySum": {
+      "amount": 600,
+      "currency": {
+        "code": "RUB"
+      }
+    },
+    "commission": {
+      "amount": 600,
+      "currency": {
+        "code": "RUB"
+      }
+    },
+    "totalSum": {
+      "amount": 600,
+      "currency": {
+        "code": "RUB"
+      }
+    },
+    "description": "string",
+    "limitTransactionId": "4d9065bc-55f7-4317-b728-5097344dc72f",
+    "confirmTransactionId": "4d9065bc-55f7-4317-b728-5097344dc72f",
+    "subStatus": "LIMIT_EXCEEDED",
+    "mobileNumber": {
+      "number": "9008001122"
+    },
+    "actions": {
+      "repeat": true,
+      "check": true,
+      "remind": true,
+      "template": true,
+      "autoPaymentByDate": true,
+      "autoPaymentByBalance": true
+    }
+  },
+  "approve": {
+    "code": {
+      "lifeTime": "string"
+    },
+    "confirmMethods": [
+      {
+        "type": "VOICE"
+      }
+    ]
+  }
+}'
+      '400':
+        media-type: /
+        body: '{
+        "status": {
+          "code": "string",
+          "message": "Ошибка валидации запроса на оплату"
+        },
+        "errors": [
+          {
+            "name": "string",
+            "code": "string",
+            "message": "Некорректные данные"
+          }
+        ]
+      }'
+      '500':
+        media-type: /
+        body: 'string'
+
+  GET_PAYMENT_INFO_BASE_PATH:
+    name: GET_PAYMENT_INFO_BASE_PATH
+    url: /payments/info/([a-zA-Z0-9/-]*)
+    port: 8089
+    method: GET
+    httpStatus: 400
+    fixedDelay: 10
+    file-response: json-responses/*/payments-info.json
+    description: Запрос детальной информации по платежу
+    request-headers:
+      X-MDM-ID: X-MDM-ID
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+  "id": "4d9065bc-55f7-4317-b728-5097344dc72f",
+  "documentId": "1234567890",
+  "status": "PROCESSING",
+  "createdAt": "2022-03-09T15:10:02.707Z",
+  "updatedAt": "2022-03-09T15:10:02.707Z",
+  "creationChannel": "WEB",
+  "sourceType": "NEW",
+  "userMdmId": "1234567890",
+  "sourceSystemId": "payments-acceptance-mobile",
+  "serviceProvider": {
+    "id": "1",
+    "name": "Какой-то поставщик",
+    "shortName": "Поставщик",
+    "type": "CONTRACT",
+    "subTypes": "MOBILE_BY_PHONE",
+    "description": "Описание поставщика",
+    "actions": {
+      "payment": {
+        "enabled": true,
+        "systemId": "MINERVA"
+      },
+      "template": {
+        "enabled": true,
+        "systemId": "MINERVA"
+      },
+      "autoPaymentByDate": {
+        "enabled": true,
+        "systemId": "MINERVA"
+      },
+      "autoPaymentByBalance": {
+        "enabled": true,
+        "systemId": "MINERVA"
+      },
+      "invoice": {
+        "enabled": true,
+        "systemId": "MINERVA"
+      },
+      "repeat": {
+        "enabled": true,
+        "systemId": "MINERVA"
+      },
+      "remind": {
+        "enabled": true,
+        "systemId": "MINERVA"
+      },
+      "subscription": {
+        "enabled": true,
+        "systemId": "MINERVA"
+      }
+    },
+    "categoryIds": [
+      "string"
+    ]
+  },
+  "clientProduct": {
+    "account": {
+      "entityName": "string",
+      "alias": "string",
+      "publicId": "string",
+      "productType": "ACCOUNT",
+      "entityType": "string",
+      "entityId": "string",
+      "balance": {
+        "amount": 600,
+        "currency": {
+          "code": "RUB"
+        }
+      }
+    },
+    "card": {
+      "entityName": "string",
+      "alias": "string",
+      "publicId": "string",
+      "productType": "CARD",
+      "entityType": "string",
+      "entityId": "string",
+      "balance": {
+        "amount": 600,
+        "currency": {
+          "code": "RUB"
+        }
+      }
+    }
+  },
+  "paySum": {
+    "amount": 600,
+    "currency": {
+      "code": "RUB"
+    }
+  },
+  "commission": {
+    "amount": 600,
+    "currency": {
+      "code": "RUB"
+    }
+  },
+  "totalSum": {
+    "amount": 600,
+    "currency": {
+      "code": "RUB"
+    }
+  },
+  "description": "string",
+  "limitTransactionId": "4d9065bc-55f7-4317-b728-5097344dc72f",
+  "confirmTransactionId": "4d9065bc-55f7-4317-b728-5097344dc72f",
+  "subStatus": "LIMIT_EXCEEDED",
+  "mobileNumber": {
+    "number": "9008001122"
+  },
+  "actions": {
+    "repeat": true,
+    "check": true,
+    "remind": true,
+    "template": true,
+    "autoPaymentByDate": true,
+    "autoPaymentByBalance": true
+  }
+}'
+      '400':
+        media-type: /
+        body: '{
+  "status": {
+    "code": "string",
+    "message": "Ошибка валидации запроса на оплату"
+  },
+  "errors": [
+    {
+      "name": "string",
+      "code": "string",
+      "message": "Некорректные данные"
+    }
+  ]
+}'
+      '500':
+        media-type: /
+        body: 'string'
+
+  GET_START_MOBILE_PAYMENT_REQUEST_PATH:
+    name: GET_START_MOBILE_PAYMENT_REQUEST_PATH
+    url: /payments/start
+    port: 8090
+    method: POST
+    httpStatus: 400
+    fixedDelay: 10
+    file-response: json-responses/*/payments-start.json
+    description: Запрос для старта платежа
+    request-body: '{"serviceProviderId": "1"}'
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+  "paymentOptions": {
+    "paySumLimit": {
+      "minSum": {
+        "amount": 600,
+        "currency": {
+          "code": "RUB"
+        }
+      },
+      "maxSum": {
+        "amount": 600,
+        "currency": {
+          "code": "RUB"
+        }
+      }
+    },
+    "recommendedSums": [
+      {
+        "amount": 600,
+        "currency": {
+          "code": "RUB"
+        }
+      }
+    ]
+  },
+  "mobileNumber": {
+    "validFormats": [
+      "string"
+    ]
+  }
+}'
+      '400':
+        media-type: /
+        body: '{
+  "status": {
+    "code": "string",
+    "message": "Ошибка валидации запроса на оплату"
+  },
+  "errors": [
+    {
+      "name": "string",
+      "code": "string",
+      "message": "Некорректные данные"
+    }
+  ]
+}'
+      '500':
+        media-type: /
+        body: 'string'
+
+
+
+
+

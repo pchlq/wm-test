@@ -19,8 +19,15 @@ public class Settings {
     private Map<String, ?> getAtmNearbyDetailPath;
     private Map<String, ?> getAtmNearbyFilteredPath;
     private Map<String, ?> getAtmNearbyShortPath;
+
     private Map<String, ?> getCategoriesPath;
     private Map<String, ?> getOperatorInfoPath;
+    private Map<String, ?> getOperatorPath;
+
+    private Map<String, ?> getRequestMobilePaymentRequestPath;
+    private Map<String, ?> getConfirmMobilePaymentRequestPath;
+    private Map<String, ?> getPaymentInfoBasePath;
+    private Map<String, ?> getStartMobilePaymentRequestPath;
 
     private final List<String> envs = new ArrayList<>();
 

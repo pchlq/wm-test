@@ -28,7 +28,8 @@ public class UtilsHelper {
                                     String description,
                                     Map<String, ?> queryParams,
                                     Map<String, Map<String, String>> httpStatusResponse,
-                                    Map<String, String> requestHeaders) throws IOException {
+                                    Map<String, String> requestHeaders,
+                                    String requestBody) throws IOException {
 
         var responseMap = httpStatusResponse.get(String.valueOf(status));
         var payload = String.valueOf(responseMap.get("body"));
@@ -46,6 +47,10 @@ public class UtilsHelper {
 
         queryParams.forEach((key, value) -> stubRequestMatcher.withQueryParam(key, equalTo(String.valueOf(value))));
         requestHeaders.forEach((key, value) -> stubRequestMatcher.withHeader(key, equalTo(String.valueOf(value))));
+
+        if (StringUtils.isNotEmpty(requestBody)) {
+            stubRequestMatcher.withRequestBody(equalToJson(requestBody));
+        }
 
         wireMockServer.stubFor(stubRequestMatcher
             .willReturn(aResponse()
