@@ -37,6 +37,7 @@ public class WmServerLauncher {
 					Map<String, String> queryParamsMap = new HashMap<>();
 					optionalQueryParamsMap.ifPresent(o -> queryParamsMap.putAll((Map<String, String>) o));
 
+					String requestBody = Optional.ofNullable((String) env.get("request-body")).orElse("");
 
 					UtilsHelper.startWireMockServer(
 						(String) env.get("url"),
@@ -48,11 +49,11 @@ public class WmServerLauncher {
 						(String) env.get("description"),
 						queryParamsMap,
 						(Map<String, Map<String, String>>) env.get("httpStatus-response"),
-						requestHeadersMap );
+						requestHeadersMap,
+						requestBody);
 				}
 			}
 		}
-
 
 	}
 
