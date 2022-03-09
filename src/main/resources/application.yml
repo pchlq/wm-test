@@ -1,0 +1,487 @@
+---
+run:
+  envs:
+#    GET_ATM_DETAIL_PATH,
+#    GET_ATM_NEARBY_DETAIL_PATH,
+#    GET_ATM_NEARBY_FILTERED_PATH,
+#    GET_ATM_NEARBY_SHORT_PATH,
+
+    GET_CATEGORIES_PATH,
+    GET_OPERATOR_INFO_PATH,
+
+settings:
+  # Банкоматы
+  GET_ATM_DETAIL_PATH:
+    name: GET_ATM_DETAIL_PATH
+    url: /atm
+    port: 8080
+    method: GET
+    httpStatus: 200
+    fixedDelay: 10
+    fileResponse: json-responses/*/atm-detailed.json
+    description: Получение полной информации по всем банкоматам
+    query-params:
+      code: CODE
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+
+  "address": {
+    "address": "string",
+    "city": "string",
+    "district": "string",
+    "region": "string"
+  },
+  "bnkcd": "string",
+  "code": "string",
+  "comment": "string",
+  "hasLocation": true,
+  "latitude": 0,
+  "longitude": 0,
+  "organization": "string",
+  "ownerBank": "string",
+  "schedule": {
+    "allDay": true,
+    "allDayText": "string",
+    "friday": "string",
+    "monday": "string",
+    "saturday": "string",
+    "sunday": "string",
+    "thursday": "string",
+    "tuesday": "string",
+    "wednesday": "string"
+  },
+  "services": {
+    "additionalProp1": {
+      "serviceActivity": "AVAILABLE",
+      "serviceCapability": "SUPPORTED"
+    },
+    "additionalProp2": {
+      "serviceActivity": "AVAILABLE",
+      "serviceCapability": "SUPPORTED"
+    },
+    "additionalProp3": {
+      "serviceActivity": "AVAILABLE",
+      "serviceCapability": "SUPPORTED"
+    }
+  },
+  "type": "string",
+  "updateDate": "string"
+}'
+
+  GET_ATM_NEARBY_DETAIL_PATH:
+    name: GET_ATM_NEARBY_DETAIL_PATH
+    url: /atm/nearby/detailed
+    port: 8081
+    method: GET
+    httpStatus: 200
+    fixedDelay: 10
+    fileResponse: json-responses/*/atm-nearby-detailed.json
+    description: Получение списка всех приближенных банкоматов с полной информацией по каждому
+    query-params:
+      latitude: 1
+      longitude: 2
+      radius: 3
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+  "atms": [
+    {
+      "address": {
+        "address": "string",
+        "city": "string",
+        "district": "string",
+        "region": "string"
+      },
+      "bnkcd": "string",
+      "code": "string",
+      "comment": "string",
+      "hasLocation": true,
+      "latitude": 0,
+      "longitude": 0,
+      "organization": "string",
+      "ownerBank": "string",
+      "schedule": {
+        "allDay": true,
+        "allDayText": "string",
+        "friday": "string",
+        "monday": "string",
+        "saturday": "string",
+        "sunday": "string",
+        "thursday": "string",
+        "tuesday": "string",
+        "wednesday": "string"
+      },
+      "services": {
+        "additionalProp1": {
+          "serviceActivity": "AVAILABLE",
+          "serviceCapability": "SUPPORTED"
+        },
+        "additionalProp2": {
+          "serviceActivity": "AVAILABLE",
+          "serviceCapability": "SUPPORTED"
+        },
+        "additionalProp3": {
+          "serviceActivity": "AVAILABLE",
+          "serviceCapability": "SUPPORTED"
+        }
+      },
+      "type": "string",
+      "updateDate": "string"
+    }
+  ]
+}'
+
+  GET_ATM_NEARBY_FILTERED_PATH:
+    name: GET_ATM_NEARBY_FILTERED_PATH
+    url: /atm/nearby/filtered
+    port: 8082
+    method: GET
+    httpStatus: 200
+    fixedDelay: 10
+    fileResponse: json-responses/*/atm-nearby-filtered.json
+    description: Получение списка всех приближенных банкоматов с фильтрацией
+    query-params:
+      latitude: 1
+      longitude: 2
+      radius: 3
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+  "atms": [
+    {
+      "address": "string",
+      "city": "string",
+      "code": "string",
+      "latitude": 0,
+      "longitude": 0,
+      "organization": "string",
+      "ownerBank": "string",
+      "working": {
+        "from": "string",
+        "status": "CLOSED",
+        "till": "string"
+      }
+    }
+  ]
+}'
+
+  GET_ATM_NEARBY_SHORT_PATH:
+    name: GET_ATM_NEARBY_SHORT_PATH
+    url: /atm/nearby
+    port: 8083
+    method: GET
+    httpStatus: 200
+    fixedDelay: 10
+    file-response: json-responses/*/atm-nearby.json
+    description: Получение списка всех приближенных банкоматов
+    query-params:
+      latitude: 1
+      longitude: 2
+      radius: 3
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+  "atms": [
+    {
+      "address": "string",
+      "code": "string",
+      "latitude": 0,
+      "longitude": 0
+    }
+  ]
+}'
+
+  # Поставщики услуг
+  GET_CATEGORIES_PATH:
+    name: GET_CATEGORIES_PATH
+    url: /catalog/categories
+    port: 8084
+    method: GET
+    httpStatus: 400
+    fixedDelay: 10
+    file-response: json-responses/*/catalog-categories.json
+    description: Получение доступных категорий услуг ПУ
+    query-params:
+      clientUnc: clientUnc
+      operationPageSize: 3
+      regionId: regionId
+    request-headers:
+      X-UNC: X-UNC
+      X-CLIENT-CHANNEL: MOBILE # MOBILE, ATM, WEB, OPEN_API, VTB_FRONT
+      X-LOGIN-MODE: X-LOGIN-MODE
+      X-ROLES: X-ROLES
+      X-PARTNER-ID: X-PARTNER-ID
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+      "items": [
+        {
+          "id": "string",
+          "name": "string",
+          "nameKey": "string",
+          "serviceProviders": [
+            {
+              "id": "string",
+              "operationCode": "string",
+              "productId": "string",
+              "type": "CONTRACT",
+              "subTypes": [
+                "MOBILE_BY_PHONE"
+              ],
+              "name": "string",
+              "shortName": "string",
+              "description": "string",
+              "receiver": {
+                "inn": "string",
+                "kpp": "string",
+                "account": "string",
+                "bank": {
+                  "name": "string",
+                  "corAccount": "string",
+                  "bic": "string"
+                }
+              },
+              "actions": [
+                {
+                  "key": "PAYMENT",
+                  "systemId": "MINERVA"
+                }
+              ],
+              "categoryIds": [
+                "string"
+              ],
+              "localityName": "string",
+              "regionIds": [
+                "string"
+              ],
+              "pmntSettings": {
+                "acceptanceKey": "string",
+                "clientAuthTypePayAvailable": true
+              }
+            }
+          ]
+        }
+      ],
+      "pageNumber": 0,
+      "pageSize": 0,
+      "total": 0,
+      "hasMore": true
+    }'
+      '400':
+        media-type: /
+        body: '{"type": "string", "message": "string"}'
+      '500':
+        media-type: /
+        body: '{"type": "string", "message": "string"}'
+      '503':
+        media-type: application/json
+        body: '{
+  "items": [
+    {
+      "id": "string",
+      "name": "string",
+      "nameKey": "string",
+      "serviceProviders": [
+        {
+          "id": "string",
+          "operationCode": "string",
+          "productId": "string",
+          "type": "CONTRACT",
+          "subTypes": [
+            "MOBILE_BY_PHONE"
+          ],
+          "name": "string",
+          "shortName": "string",
+          "description": "string",
+          "receiver": {
+            "inn": "string",
+            "kpp": "string",
+            "account": "string",
+            "bank": {
+              "name": "string",
+              "corAccount": "string",
+              "bic": "string"
+            }
+          },
+          "actions": [
+            {
+              "key": "PAYMENT",
+              "systemId": "MINERVA"
+            }
+          ],
+          "categoryIds": [
+            "string"
+          ],
+          "localityName": "string",
+          "regionIds": [
+            "string"
+          ],
+          "pmntSettings": {
+            "acceptanceKey": "string",
+            "clientAuthTypePayAvailable": true
+          }
+        }
+      ]
+    }
+  ],
+  "pageNumber": 0,
+  "pageSize": 0,
+  "total": 0,
+  "hasMore": true
+}'
+
+  GET_OPERATOR_INFO_PATH:
+    name: GET_OPERATOR_INFO_PATH
+    url: /catalog/operations/([a-zA-Z0-9/-]*)
+    port: 8085
+    method: GET
+    httpStatus: 200
+    fixedDelay: 10
+    file-response: json-responses/*/catalog-operations.json
+    description: Получение услуги ПУ по ID
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+  "items": [
+    {
+      "id": "string",
+      "operationCode": "string",
+      "productId": "string",
+      "type": "CONTRACT",
+      "subTypes": [
+        "MOBILE_BY_PHONE"
+      ],
+      "name": "string",
+      "shortName": "string",
+      "description": "string",
+      "receiver": {
+        "inn": "string",
+        "kpp": "string",
+        "account": "string",
+        "bank": {
+          "name": "string",
+          "corAccount": "string",
+          "bic": "string"
+        }
+      },
+      "actions": [
+        {
+          "key": "PAYMENT",
+          "systemId": "MINERVA"
+        }
+      ],
+      "categoryIds": [
+        "string"
+      ],
+      "localityName": "string",
+      "regionIds": [
+        "string"
+      ],
+      "pmntSettings": {
+        "acceptanceKey": "string",
+        "clientAuthTypePayAvailable": true
+      }
+    }
+  ],
+  "pageNumber": 0,
+  "pageSize": 0,
+  "total": 0,
+  "hasMore": true
+}'
+      '400':
+        media-type: /
+        body: '{"type": "string", "message": "string"}'
+      '500':
+        media-type: /
+        body: '{"type": "string", "message": "string"}'
+
+  GET_OPERATOR_PATH:
+    name: GET_OPERATOR_PATH
+    url: /catalog/operations
+    port: 8086
+    method: GET
+    httpStatus: 500
+    fixedDelay: 10
+    file-response: json-responses/*/catalog-operations.json
+    description: Поиск услуг ПУ
+    query-params:
+      clientUnc: clientUnc
+      categoryId: categoryId
+      regionId: regionId
+      filter: filter
+      subTypes: subTypes
+      actions: PAYMENT  # PAYMENT, TEMPLATE, AUTOPAYMENT_BY_DATE, AUTOPAYMENT_BY_BALANCE, INVOICE, REPEAT, REMIND, SUBSCRIPTION
+      providerTypes: CONTRACT  # CONTRACT, GIS_HCS, FNS
+      pageNumber: pageNumber
+      pageSize: pageSize
+    request-headers:
+      X-UNC: X-UNC
+      X-CLIENT-CHANNEL: MOBILE # MOBILE, ATM, WEB, OPEN_API, VTB_FRONT
+      X-LOGIN-MODE: X-LOGIN-MODE
+      X-ROLES: X-ROLES
+      X-PARTNER-ID: X-PARTNER-ID
+    httpStatus-response:
+      '200':
+        media-type: application/json
+        body: '{
+    "items": [
+      {
+        "id": "string",
+        "operationCode": "string",
+        "productId": "string",
+        "type": "CONTRACT",
+        "subTypes": [
+          "MOBILE_BY_PHONE"
+        ],
+        "name": "string",
+        "shortName": "string",
+        "description": "string",
+        "receiver": {
+          "inn": "string",
+          "kpp": "string",
+          "account": "string",
+          "bank": {
+            "name": "string",
+            "corAccount": "string",
+            "bic": "string"
+          }
+        },
+        "actions": [
+          {
+            "key": "PAYMENT",
+            "systemId": "MINERVA"
+          }
+        ],
+        "categoryIds": [
+          "string"
+        ],
+        "localityName": "string",
+        "regionIds": [
+          "string"
+        ],
+        "pmntSettings": {
+          "acceptanceKey": "string",
+          "clientAuthTypePayAvailable": true
+        }
+      }
+    ],
+    "pageNumber": 0,
+    "pageSize": 0,
+    "total": 0,
+    "hasMore": true
+  }'
+      '400':
+        media-type: /
+        body: '{"type": "string", "message": "string"}'
+      '500':
+        media-type: /
+        body: '{"type": "string", "message": "string"}'
+
+  # Платежи поставщикам услуг
